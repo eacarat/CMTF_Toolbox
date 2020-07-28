@@ -1,15 +1,3 @@
-%% The MATLAB CMTF Toolbox 
-% The MATLAB CMTF Toolbox has two different models based on Coupled Matrix and Tensor Factorizations to jointly analyze datasets of different orders: 
-% (i) CMTF [1] and (ii) ACMTF [2, 5]. First-order unconstrained optimization is used to fit both versions. The MATLAB CMTF Toolbox has the functions necessary to
-% compute function values and gradients for CMTF and ACMTF. For the optimization routines, it uses the Poblano Toolbox [3] for unconstrained optimization, and also the 
-% LBFGSB implementation for nonnegativity constraints, available at https://github.com/stephenbeckr/L-BFGS-B-C. The Tensor Toolbox [4] is also needed to run the functions 
-% in the Matlab CMTF Toolbox. This page illustrates some example scripts, e.g., TESTER_CMTF, TESTER_ACMTF, TESTER_CMTF_MISSING, TESTER_ACMTF_MISSING showing the use of 
-% CMTF and ACMTF. For more details, explore CMTF_OPT and ACMTF_OPT. 
-%
-%% What is new?
-% # Compatibility with the latest version of Tensor Toolbox and Poblano Toolbox 
-% # Option to impose constraints through the use of lbfgsb from https://github.com/stephenbeckr/L-BFGS-B-C 
-
 %% CMTF (Coupled Matrix and Tensor Factorizations) using first-order optimization
 % Coupled Matrix and Tensor Factorizations model higher-order tensors using CANDECOMP/PARAFAC (CP) models and factorizes matrices jointly.
 % TESTER_CMTF is an example script showing how to use CMTF.
@@ -255,10 +243,3 @@ end
 corr(Fac2{2},data.Atrue{4})
 
 
-%% References
-% # E. Acar, T. G. Kolda, and D. M. Dunlavy, <http://arxiv.org/abs/1105.3422v1 All-at-once Optimization for
-% Coupled Matrix and Tensor Factorizations>, KDD Workshop on Mining and Learning with Graphs, 2011 (arXiv:1105.3422v1).
-% # E. Acar, A. J. Lawaetz, M. A. Rasmussen,and R. Bro, <http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=6610925 Structure-Revealing Data Fusion Model with Applications in Metabolomics>, IEEE EMBC, pages 6023-6026, 2013.
-% # D. M. Dunlavy, T. G. Kolda, and E. Acar, Poblano: A Matlab Toolbox for Gradient-Based Optimization, Available: https://github.com/sandialabs/poblano_toolbox, July 2020
-% # Brett W. Bader, Tamara G. Kolda and others. MATLAB Tensor Toolbox, Available: https://gitlab.com/tensors/tensor_toolbox, July 2020.
-% # E. Acar, E. E. Papalexakis, G. Gurdeniz, M. Rasmussen, A. J. Lawaetz, M. Nilsson, and R. Bro, <http://www.biomedcentral.com/1471-2105/15/239 Structure-Revealing Data Fusion>, BMC Bioinformatics, 15: 239, 2014.        
