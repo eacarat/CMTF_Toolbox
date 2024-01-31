@@ -15,6 +15,7 @@ of CMTF and ACMTF. For more details, explore CMTF_OPT and ACMTF_OPT.
 Compared to the previous versions of the MATLAB CMTF Toolbox [v1.1](http://www.models.life.ku.dk/joda/CMTF_Toolbox), the toolbox now has 
 - Compatibility with the latest versions of Tensor Toolbox and Poblano Toolbox 
 - Option to impose constraints through the use of lbfgsb
+- Real data example showing how to use the ACMTF model to jointly analyze measurements of mixtures from multiple platforms. That is the example used in the original ACMTF paper (E. Acar, E. E. Papalexakis, G. Gurdeniz,  M. A. Rasmussen,  A. J. Lawaetz, M. Nilsson,  R. Bro, [Structure-Revealing Data Fusion](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-239), BMC Bioinformatics, 15: 239, 2014.)
 
 
 ## How to cite
