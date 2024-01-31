@@ -17,6 +17,7 @@ Compared to the previous versions of the MATLAB CMTF Toolbox [v1.1](http://www.m
 - Option to impose constraints through the use of lbfgsb
 - Option to have a ridge penalty on the factor matrices when fitting a CMTF model 
 - Real data example showing how to use the ACMTF model to jointly analyze measurements of mixtures from multiple platforms. That is the example used in the original ACMTF paper:
+
   E. Acar, E. E. Papalexakis, G. Gurdeniz,  M. A. Rasmussen,  A. J. Lawaetz, M. Nilsson,  R. Bro, [Structure-Revealing Data Fusion](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-15-239), BMC Bioinformatics, 15: 239, 2014.)
 
 
