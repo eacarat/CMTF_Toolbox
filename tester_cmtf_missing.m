@@ -43,6 +43,9 @@ function  data = tester_cmtf_missing(varargin)
 %   data = tester_cmtf_missing('M',...) gives as input the percentage of missing entries
 %   for each data set, e.g., [0.5 0.5].
 %
+%   data = tester_cmtf_missing('ridge_penalty',....) gives as input the ridge penalty
+%   parameter - the default value is 0.
+%
 % See also CMTF_OPT, CREATE_COUPLED, TT_CREATE_MISSING_DATA_PATTERN
 %
 % This is the MATLAB CMTF Toolbox.
@@ -65,16 +68,17 @@ function  data = tester_cmtf_missing(varargin)
 
 %% Parse inputs
 params = inputParser;
-params.addParamValue('R', 3, @(x) x > 0);
+params.addParameter('R', 3, @(x) x > 0);
 params.addParameter('alg', 'ncg', @(x) ismember(x,{'ncg','tn','lbfgs','lbfgsb'}));
-params.addParamValue('size', [50 30 40 20], @isnumeric);
-params.addParamValue('modes', {[1 2 3], [1 4]}, @iscell);
-params.addParamValue('lambdas', {[1 1 1], [1 1 1]}, @iscell);
-params.addParamValue('flag_sparse',[0 0], @isnumeric);
+params.addParameter('size', [50 30 40 20], @isnumeric);
+params.addParameter('modes', {[1 2 3], [1 4]}, @iscell);
+params.addParameter('lambdas', {[1 1 1], [1 1 1]}, @iscell);
+params.addParameter('flag_sparse',[0 0], @isnumeric);
 params.addParameter('flag_gnn',[0 0 0 0], @isnumeric); %nonnegative data generation
 params.addParameter('flag_fnn',[0 0 0 0], @isnumeric); %nonnegative model fitting
-params.addParamValue('M',[0.5 0.5], @isnumeric);
-params.addParamValue('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs'})));
+params.addParameter('M',[0.5 0.5], @isnumeric);
+params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs'})));
+params.addParameter('ridge_penalty', 0,  @isnumeric); % ridge regularization on factor matrices
 params.parse(varargin{:});
 
 %% Parameters
@@ -135,7 +139,7 @@ options.StopTol      = 1e-8;
 options.RelFuncTol   = 1e-8;
 
 % fit CMTF-OPT
-[Fac, G,out]  = cmtf_opt(Z,R,'init',init,'alg_options',options,'flag_nn', params.Results.flag_fnn, 'alg',alg); 
+[Fac, G,out]  = cmtf_opt(Z,R,'init',init,'alg_options',options,'flag_nn', params.Results.flag_fnn, 'alg',alg, 'ridge_penalty', params.Results.ridge_penalty); 
 data.Fac      = Fac.U;
 data.W        = W;
 data.Xorig    = X;

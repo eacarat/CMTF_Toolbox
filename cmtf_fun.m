@@ -1,9 +1,9 @@
-function [f,g] = cmtf_fun(x, Z, Znormsqr)
+function [f,g] = cmtf_fun(x, Z, Znormsqr, lambda)
 % CMTF_FUN computes the function value and the gradient for coupled
 % matrix-tensor factorization, where matrix model is a matrix factorization
 % model and tensor model is a CANDECOMP/PARAFAC model.
 % 
-% [f,g] = cmtf_fun(x, Z, Znormsqr)
+% [f,g] = cmtf_fun(x, Z, Znormsqr, lambda)
 %
 % Input:   x: a vector of length P, where for an I by J by K tensor and I
 %             by L matrix, P = (I+J+K+L)*R and R is the number of
@@ -14,6 +14,7 @@ function [f,g] = cmtf_fun(x, Z, Znormsqr)
 %          Z: a structure with object, modes, size fields storing the
 %             coupled data sets (See cmtf_check).
 %          Znormsqr: a cell array with squared Frobenius norm of each Z.object
+%          lambda: ridge penalty parameter       
 %
 % Output:  f: function value of the combined objective function.
 %          g: a vector of length P corresponding to the gradient.
@@ -30,13 +31,12 @@ function [f,g] = cmtf_fun(x, Z, Znormsqr)
 %      Fusion Model with Applications in Metabolomics, IEEE EMBC, pages 6023-6026, 2013.
 %    - (ACMTF)E. Acar,  E. E. Papalexakis, G. Gurdeniz, M. Rasmussen, A. J. Lawaetz, M. Nilsson, and R. Bro, 
 %      Structure-Revealing Data Fusion, BMC Bioinformatics, 15: 239, 2014.        
-%
 
 %% Convert the input vector into a cell array of factor matrices
 A  = cmtf_vec_to_fac(x,Z);
 
 %% Compute the function and gradient values
-[f,G] = cmtf_fg(Z,A,Znormsqr);
+[f,G] = cmtf_fg(Z,A,Znormsqr,lambda);
 
 % Vectorize the cell array of matrices
 g = tt_fac_to_vec(G);

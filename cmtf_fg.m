@@ -1,4 +1,4 @@
-function [f,G] = cmtf_fg(Z,A,Znormsqr)
+function [f,G] = cmtf_fg(Z,A,Znormsqr,lambda)
 % CMTF_FG Function and gradient of coupled matrix-tensor factorization,
 % where the coupled model is formulated, for instance, for a third-order tensor 
 % and a matrix coupled in the first mode as 
@@ -10,6 +10,7 @@ function [f,G] = cmtf_fg(Z,A,Znormsqr)
 %            coupled data sets (See cmtf_check)
 %         A: a cell array of factor matrices
 %         Znormsqr: a cell array with squared Frobenius norm of each Z.object
+%         lambda: ridge penalty parameter
 %
 % Output: f: function value
 %         G: a cell array of gradients corresponding to each factor matrix;
@@ -74,7 +75,8 @@ end
 %% Compute overall gradient
 G = cell(size(A));
 for n = 1:numel(G)
-    G{n} = zeros(size(A{n}));
+    %G{n} = zeros(size(A{n}));
+    G{n} = lambda*A{n};
 end
 for p = 1:P
     for i = 1:length(Z.modes{p})
@@ -85,5 +87,9 @@ end
 
 %% Compute overall function value
 f = sum(cell2mat(fp));
-
+freg = 0;
+for n=1:numel(G)
+    freg =  freg + 0.5*lambda*norm(A{n},'fro')^2;
+end
+f = f+freg;
 return;

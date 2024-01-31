@@ -36,6 +36,9 @@ function [P, G, output] = cmtf_opt(Z,R,varargin)
 %   the NCG algorithm options which can then be modified and passed
 %   through this function to NCG.
 %
+%   'ridge_penalty' - Parameter for the ridge penalty on the factor matrices -
+%    the default value is 0.
+%
 %   [A, G0] = CMTF_OPT(...) also returns the initial guess.
 %
 %   [A, G0, OUT] = CMTF_OPT(...) also returns a structure with the
@@ -55,9 +58,6 @@ function [P, G, output] = cmtf_opt(Z,R,varargin)
 %    - (ACMTF)E. Acar,  E. E. Papalexakis, G. Gurdeniz, M. Rasmussen, A. J. Lawaetz, M. Nilsson, and R. Bro, 
 %      Structure-Revealing Data Fusion, BMC Bioinformatics, 15: 239, 2014.        
 %
-% Feb 2020: adding the option of using lbfgsb 
-% July 2020: changes in default options for lbfgsb
-
 
 %% Error checking
 cmtf_check(Z);
@@ -69,6 +69,7 @@ end
 %% Set parameters
 params = inputParser;
 params.addParameter('alg', 'ncg', @(x) ismember(x,{'ncg','tn','lbfgs', 'lbfgsb'}));
+params.addParameter('ridge_penalty', 0,  @isnumeric); 
 params.addParameter('flag_nn', [0 0 0 0],  @isnumeric);
 params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs'})));
 params.addOptional('alg_options', '', @isstruct);
@@ -76,6 +77,7 @@ params.parse(varargin{:});
 P = numel(Z.object);
 
 use_lbfgsb = strcmp(params.Results.alg,'lbfgsb');
+lambda     = params.Results.ridge_penalty;
 
 %% Set up optimization algorithm
 if use_lbfgsb % L-BFGS-B
@@ -103,6 +105,7 @@ if use_lbfgsb
     options.maxIts      = 10000;
     options.maxTotalIts = 50000;
     options.printEvery  = 100;
+   % options.factr = 1e-9/eps;
 elseif isempty(params.Results.alg_options)
     options = feval(fhandle, 'defaults');
 else
@@ -160,10 +163,10 @@ for p = 1:P
 end
 if  use_lbfgsb
     options.x0 = tt_fac_to_vec(G);
-    fhandle    = @(x)cmtf_fun(x,Z,Znormsqr);
+    fhandle    = @(x)cmtf_fun(x,Z,Znormsqr, lambda);
     [out.X,out.F, out.info_lbfgsb] = lbfgsb(fhandle, l, u, options);
 else
-    out = feval(fhandle, @(x)cmtf_fun(x,Z,Znormsqr), tt_fac_to_vec(G), options);
+    out = feval(fhandle, @(x)cmtf_fun(x,Z,Znormsqr, lambda), tt_fac_to_vec(G), options);
 end
 
 

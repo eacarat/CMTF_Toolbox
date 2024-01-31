@@ -1,6 +1,7 @@
 %% CMTF (Coupled Matrix and Tensor Factorizations) using first-order optimization
 % Coupled Matrix and Tensor Factorizations model higher-order tensors using CANDECOMP/PARAFAC (CP) models and factorizes matrices jointly.
-% TESTER_CMTF is an example script showing how to use CMTF.
+% TESTER_CMTF is an example script showing how to fit CMTF and ACMTF models to coupled matrices and higher-order tensors.
+%
 
 % Example 1:
 % Generate a third-order data set coupled with a matrix and fit a CMTF model. 
@@ -56,6 +57,21 @@ data = tester_cmtf([],'modes',{[1 2 3],[1 4]}, 'size', [100 100 100 100],'flag_s
 
 % with nonnegativity constraints
 data = tester_cmtf([],'modes',{[1 2 3],[1 4]}, 'size', [100 100 100 100],'flag_sparse',[1 1], 'flag_gnn', [1 1 1 1], 'flag_fnn',[1 1 1 1],'alg', 'lbfgsb');
+
+% Example 7: Example 5 with ridge_penalty
+% Generate a third-order tensor coupled with a matrix and fit a CMTF model with/without nonnegativity constraints
+% use lbfgsb - with no constraints on the factors 
+data = tester_cmtf([], 'R',3,'size',[30 20 10 40], 'modes',{[1 2 3],[1 4]},'alg','lbfgsb', 'ridge_penalty', 1e-2); 
+corr(data.Fac{1}, data.Factrue{1})
+
+% use  lbfgsb - with factors generated to be nonnegative - CMTF has no constraints
+data  = tester_cmtf([], 'R',3,'size',[30 20 10 40], 'modes',{[1 2 3],[1 4]},'alg','lbfgsb', 'flag_gnn', [1 1 1 1], 'ridge_penalty', 1e-2); 
+corr(data.Fac{1}, data.Factrue{1})
+
+% use  lbfgsb - with factors generated to be nonnegative and constrained by the model to be nonnegative
+data_nn = tester_cmtf(data, 'R',3,'size',[30 20 10 40], 'modes',{[1 2 3],[1 4]},'alg','lbfgsb', 'flag_gnn', [1 1 1 1], 'flag_fnn',[1 1 1 1], 'ridge_penalty',1e-2); 
+corr(data_nn.Fac{1}, data.Factrue{1})
+
 
 %% ACMTF (Coupled Matrix and Tensor Factorization) using first-order optimization with the option of imposing sparsity penalties on the component weights
 % Coupled Matrix and Tensor Factorizations model higher-order tensors using CANDECOMP/PARAFAC models and factorizes

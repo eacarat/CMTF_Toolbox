@@ -38,6 +38,9 @@ function  data = tester_cmtf(data, varargin)
 %   sets. Each data set will be stored in either dense or sparse format
 %   depending on its flag_sparse value.
 %
+%  data = tester_cmtf('ridge_penalty',....) gives as input the ridge penalty
+%  parameter - the default value is 0.
+%
 % See also CMTF_OPT, TESTER_ACMTF, CREATE_COUPLED, CREATE_COUPLED_SPARSE
 %
 % This is the MATLAB CMTF Toolbox, 2013.
@@ -62,6 +65,7 @@ params.addParameter('lambdas', {[1 1 1], [1 1 1]}, @iscell);
 params.addParameter('flag_gnn',[0 0 0 0], @isnumeric); %nonnegative data generation
 params.addParameter('flag_fnn',[0 0 0 0], @isnumeric); %nonnegative model fitting
 params.addParameter('flag_sparse',[0 0],@isnumeric); %meaning sparse storage here!
+params.addParameter('ridge_penalty', 0,  @isnumeric); % ridge regularization on factor matrices
 params.addParameter('init', 'random', @(x) (iscell(x) || ismember(x,{'random','nvecs'})));
 params.parse(varargin{:});
 
@@ -120,7 +124,7 @@ options.StopTol      = 1e-8;
 options.RelFuncTol   = 1e-8;
 
 % fit CMTF-OPT
-[Fac,G,out]   = cmtf_opt(Z,R,'init',init,'alg_options',options,'flag_nn', params.Results.flag_fnn, 'alg',alg); 
+[Fac,G,out]   = cmtf_opt(Z,R,'init',init,'alg_options',options,'flag_nn', params.Results.flag_fnn, 'alg',alg, 'ridge_penalty', params.Results.ridge_penalty); 
 data.Fac      = Fac.U;
 data.out      = out.OptOut;
 data.Factrue  = Atrue;
